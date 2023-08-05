@@ -1,0 +1,99 @@
+@import '/src/styles/colors';
+
+.login-container {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  .login-form-section {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .login-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .login-form-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .form-icon {
+          width: 4rem;
+          height: 4rem;
+          background-color: $primary-color;
+          padding: 0.5rem;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          img {
+            width: 75%;
+          }
+        }
+
+        .form-title {
+          text-align: center;
+
+          h4 {
+            margin: 0.5rem 0;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .login-form-footer {
+        width: 60%;
+        padding: 1rem;
+
+        .form {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+
+          .login-button {
+            width: 90%;
+            margin-top: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  .login-image-section {
+    width: 60%;
+    height: 100%;
+    background-image: url("/assets/images/school-background.jpeg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+@media (max-width: 1026px) {
+  .login-form-footer {
+    width: 85% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-form-section {
+    width: 100% !important;
+
+    .login-form-footer {
+      width: 70% !important;
+    }
+  }
+  .login-image-section {
+    display: none !important;
+  }
+}

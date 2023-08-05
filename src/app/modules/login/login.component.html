@@ -1,0 +1,53 @@
+<div class="login-container">
+  <div class="login-form-section">
+    <div class="login-form">
+      <div class="login-form-header">
+        <div class="form-icon">
+          <img src="assets/icons/graduation-cap-fill.svg" />
+        </div>
+        <div class="form-title">
+          <h4>Scool Management System</h4>
+        </div>
+      </div>
+      <div class="login-form-footer">
+        <form [formGroup]="loginForm" class="form" (ngSubmit)="onSubmit()">
+          <div class="form-control">
+            <mat-form-field class="example-full-width">
+              <mat-label>Username</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="username"
+                [errorStateMatcher]="matcher"
+              />
+              <mat-error
+                *ngIf="this.loginForm.controls['username'].hasError('required')"
+              >
+                Email is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-control">
+            <mat-form-field class="example-full-width">
+              <mat-label>Password</mat-label>
+              <input
+                type="password"
+                matInput
+                formControlName="password"
+                [errorStateMatcher]="matcher"
+              />
+              <mat-error
+                *ngIf="this.loginForm.controls['password'].hasError('required')"
+              >
+                Password is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <button [disabled]="loginForm.invalid" class="btn-1 login-button">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="login-image-section"></div>
+</div>
