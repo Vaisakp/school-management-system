@@ -55,6 +55,27 @@ html {
     color: $white;
   }
 
+  .btn-2{
+    background: transparent;
+    color: $primary-color;
+    text-decoration: underline;
+  }
+
+  .btn-2:hover{
+    color: #4271c2;
+  }
+
+  .black-spinner{
+    color: $black;
+  }
+
+  .btn-spinner-container{
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+  }
+
   .form-control{
     margin: 0.5rem 0;
     width: 100%;

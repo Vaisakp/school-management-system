@@ -1,0 +1,10 @@
+.student-table-container {
+  height: 100%;
+  overflow: auto;
+  table {
+    width: 100%;
+    .table-row{
+        cursor: pointer;
+    }
+  }
+}

@@ -1,1 +1,51 @@
-<p>homepage works!</p>
+<div class="homepage-container">
+  <div class="data-section">
+    <div class="action-section">
+      <form [formGroup]="getDataForm">
+        <div class="form-control">
+          <mat-form-field>
+            <mat-label>Stage</mat-label>
+            <mat-select formControlName="stage" (selectionChange)="setYear()">
+              <mat-option *ngFor="let item of stageData" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-control">
+          <mat-form-field>
+            <mat-label>Year</mat-label>
+            <mat-select formControlName="year" (selectionChange)="setClass()">
+              <mat-option *ngFor="let item of yearData" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="form-control">
+          <mat-form-field>
+            <mat-label>Class</mat-label>
+            <mat-select formControlName="class">
+              <mat-select-trigger>
+                <ng-container *ngIf="getClassListLoader; else dataTemplate">
+                  <mat-spinner diameter="16"></mat-spinner>                  
+                </ng-container>
+                <ng-template #dataTemplate>
+                   {{ this.getDataForm.controls['class'].value }}
+                </ng-template>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of classData" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button [disabled]="getUserDataLoader || getClassListLoader" class="btn-1" (click)="getUserData()">
+          <div class="btn-spinner-container" *ngIf="getUserDataLoader"><mat-spinner diameter="22"></mat-spinner></div>
+          Get Data
+        </button>
+      </form>
+    </div>
+
+    <div class="table-section" [ngClass]="getUserDataLoader ? 'full-height': ''">
+      <div class="add-new-student-section">
+        <button class="btn-2">Add new student</button>
+      </div>
+      <app-student-table></app-student-table>
+    </div>
+  </div>
+</div>
