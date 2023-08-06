@@ -21,7 +21,7 @@ export class LoginComponent {
   matcher = new MyErrorStateMatcher();
   constructor(private formBuilder: FormBuilder, private router: Router){
     this.loginForm = this.formBuilder.group({
-      username: ['asdsadsa', [Validators.required]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }

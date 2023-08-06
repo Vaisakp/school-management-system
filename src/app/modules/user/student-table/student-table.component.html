@@ -1,34 +1,38 @@
 <section class="student-table-container mat-elevation-z8" tabindex="0">
-    <table mat-table [dataSource]="dataSource">
-  
-      <ng-container matColumnDef="No.">
-        <th mat-header-cell *matHeaderCellDef>No.</th>
-        <td mat-cell *matCellDef="let element"> {{element.rollNo}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="Name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="Age">
-        <th mat-header-cell *matHeaderCellDef> Age </th>
-        <td mat-cell *matCellDef="let element"> {{element.age}} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="Address">
-        <th mat-header-cell *matHeaderCellDef> Address </th>
-        <td mat-cell *matCellDef="let element"> {{element.address}} </td>
-      </ng-container>
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="No.">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">{{ element.rollNo }}</td>
+    </ng-container>
 
-      <ng-container matColumnDef="Actions">
-        <th mat-header-cell *matHeaderCellDef> Actions </th>
-        <td mat-cell *matCellDef="let element"> 
-          <button class="btn-2">Edit</button>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr  (click)="openDetailedPage(row)" class="table-row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </section>
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Age">
+      <th mat-header-cell *matHeaderCellDef>Age</th>
+      <td mat-cell *matCellDef="let element">{{ element.age }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Address">
+      <th mat-header-cell *matHeaderCellDef>Address</th>
+      <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <button class="btn-2" (click)="editStudentData(element)">Edit</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr
+      (click)="openDetailedPage(row)"
+      class="table-row"
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+</section>
