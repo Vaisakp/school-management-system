@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { StudentData } from "src/app/models/interfaces/studentdata.interface";
 import { CreateEditStudentPopupComponent } from "../create-edit-student-popup/create-edit-student-popup.component";
 import { MatDialog } from "@angular/material/dialog";
-import { SharedUtils } from "src/app/shared/shared.utils";
+import { SharedUtils } from "src/app/shared/services/shared.utils";
 
 const ELEMENT_DATA: StudentData[] = [
   {

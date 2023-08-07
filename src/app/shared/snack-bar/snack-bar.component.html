@@ -1,0 +1,12 @@
+<div
+  class="snack-bar-container"
+  [ngClass]="data.type === 'success' ? 'success' : 'error'"
+>
+  <span
+    (click)="snackBarRef.dismissWithAction()"
+    class="content"
+    matSnackBarLabel
+  >
+    {{ data.content }}
+  </span>
+</div>

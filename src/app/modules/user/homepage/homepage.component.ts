@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { CreateEditStudentPopupComponent } from "../create-edit-student-popup/create-edit-student-popup.component";
-import { SharedUtils } from "src/app/shared/shared.utils";
+import { SharedUtils } from "src/app/shared/services/shared.utils";
 
 @Component({
   selector: "app-homepage",

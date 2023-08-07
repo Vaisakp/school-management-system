@@ -17,11 +17,11 @@
               <input
                 type="text"
                 matInput
-                formControlName="username"
+                formControlName="name"
                 [errorStateMatcher]="matcher"
               />
               <mat-error
-                *ngIf="this.loginForm.controls['username'].hasError('required')"
+                *ngIf="this.loginForm.controls['name'].hasError('required')"
               >
                 Email is required
               </mat-error>
@@ -44,7 +44,9 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <button [disabled]="loginForm.invalid" class="btn-1 login-button">Login</button>
+          <button [disabled]="loginForm.invalid" class="btn-1 login-button">
+            Login
+          </button>
         </form>
       </div>
     </div>
