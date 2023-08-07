@@ -51,9 +51,9 @@ const createStudentTable = () => {
       name TEXT NOT NULL,
       age INTEGER NOT NULL,
       address TEXT NOT NULL,
-      mark1 INTEGER NOT NULL,
-      mark2 INTEGER NOT NULL,
-      mark3 INTEGER NOT NULL,
+      subject1 INTEGER NOT NULL,
+      subject2 INTEGER NOT NULL,
+      subject3 INTEGER NOT NULL,
       stage TEXT NOT NULL,
       year TEXT NOT NULL,
       classname TEXT NOT NULL
@@ -174,16 +174,25 @@ app.post("/login", express.json(), (req, res) => {
 });
 
 app.post("/students", (req, res) => {
-  const { name, age, address, mark1, mark2, mark3, stage, year, classname } =
-    req.body;
+  const {
+    name,
+    age,
+    address,
+    subject1,
+    subject2,
+    subject3,
+    stage,
+    year,
+    classname,
+  } = req.body;
 
   if (
     !name ||
     !age ||
     !address ||
-    !mark1 ||
-    !mark2 ||
-    !mark3 ||
+    !subject1 ||
+    !subject2 ||
+    !subject3 ||
     !stage ||
     !year ||
     !classname
@@ -194,13 +203,13 @@ app.post("/students", (req, res) => {
   }
 
   const query = `
-    INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname)
+    INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   db.run(
     query,
-    [name, age, address, mark1, mark2, mark3, stage, year, classname],
+    [name, age, address, subject1, subject2, subject3, stage, year, classname],
     function (err) {
       if (err) {
         console.error("Error inserting student data:", err.message);
@@ -294,12 +303,10 @@ app.get("/classnames", (req, res) => {
   const { stage, year } = req.query;
 
   if (!stage || !year) {
-    return res
-      .status(400)
-      .json({
-        error: 'Both "stage" and "year" parameters are required.',
-        success: false,
-      });
+    return res.status(400).json({
+      error: 'Both "stage" and "year" parameters are required.',
+      success: false,
+    });
   }
 
   // Query the database to get classnames based on stage and year

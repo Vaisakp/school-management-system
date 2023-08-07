@@ -8,9 +8,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { SharedUtils } from "./services/shared.utils";
 import { SnackbarService } from "./services/snackbar.service";
+import { UppercaseOnlyDirective } from './directives/uppercase-only.directive';
 
 @NgModule({
-  declarations: [SnackBarComponent],
+  declarations: [SnackBarComponent, UppercaseOnlyDirective],
   imports: [
     CommonModule,
     MatFormFieldModule,
@@ -20,6 +21,6 @@ import { SnackbarService } from "./services/snackbar.service";
     MatSnackBarModule,
   ],
   providers: [SharedUtils, SnackbarService],
-  exports: [SnackBarComponent],
+  exports: [SnackBarComponent, UppercaseOnlyDirective],
 })
 export class SharedModule {}

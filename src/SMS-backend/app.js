@@ -51,9 +51,9 @@ const createStudentTable = () => {
       name TEXT NOT NULL,
       age INTEGER NOT NULL,
       address TEXT NOT NULL,
-      mark1 INTEGER NOT NULL,
-      mark2 INTEGER NOT NULL,
-      mark3 INTEGER NOT NULL,
+      subject1 TEXT NOT NULL,
+      subject2 TEXT NOT NULL,
+      subject3 TEXT NOT NULL,
       stage TEXT NOT NULL,
       year TEXT NOT NULL,
       classname TEXT NOT NULL,
@@ -228,7 +228,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
-  const { name, age, address, mark1, mark2, mark3, stage, year, classname } =
+  const { name, age, address, subject1, subject2, subject3, stage, year, classname } =
     req.body;
   const image = req.file;
 
@@ -236,9 +236,9 @@ app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
     !name ||
     !age ||
     !address ||
-    !mark1 ||
-    !mark2 ||
-    !mark3 ||
+    !subject1 ||
+    !subject2 ||
+    !subject3 ||
     !stage ||
     !year ||
     !classname
@@ -254,16 +254,16 @@ app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
 
   if (image) {
     query = `
-      INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname, image)
+      INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname, image)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     parameters = [
       name,
       age,
       address,
-      mark1,
-      mark2,
-      mark3,
+      subject1,
+      subject2,
+      subject3,
       stage,
       year,
       classname,
@@ -271,16 +271,16 @@ app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
     ];
   } else {
     query = `
-      INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname)
+      INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     parameters = [
       name,
       age,
       address,
-      mark1,
-      mark2,
-      mark3,
+      subject1,
+      subject2,
+      subject3,
       stage,
       year,
       classname,

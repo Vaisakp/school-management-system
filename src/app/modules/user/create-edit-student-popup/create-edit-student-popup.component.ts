@@ -49,9 +49,9 @@ export class CreateEditStudentPopupComponent {
       name: ["", [Validators.required]],
       age: ["", [Validators.required]],
       address: ["", [Validators.required]],
-      mark1: ["", [Validators.required]],
-      mark2: ["", [Validators.required]],
-      mark3: ["", [Validators.required]],
+      subject1: ["", [Validators.required]],
+      subject2: ["", [Validators.required]],
+      subject3: ["", [Validators.required]],
     });
   }
 

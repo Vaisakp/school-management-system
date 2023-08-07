@@ -65,63 +65,72 @@
 
       <div class="form-control">
         <mat-form-field class="example-full-width">
-          <mat-label>Mark 1</mat-label>
+          <mat-label>Grade of Subject 1</mat-label>
           <input
-            type="number"
+            type="text"
+            class="grade-input"
+            maxlength="1"
             matInput
-            formControlName="mark1"
+            formControlName="subject1"
             [errorStateMatcher]="matcher"
+            appUppercaseOnly
           />
           <mat-error
             *ngIf="
-              this.createEditStudentForm.controls['mark1'].hasError(
+              this.createEditStudentForm.controls['subject1'].hasError(
                 'required'
               )
             "
           >
-            Mark 1 is required
+            Grade of Subject 1 is required
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-control">
         <mat-form-field class="example-full-width">
-          <mat-label>Mark 2</mat-label>
+          <mat-label>Grade of Subject 2</mat-label>
           <input
-            type="number"
+            type="text"
+            class="grade-input"
+            maxlength="1"
             matInput
-            formControlName="mark2"
+            formControlName="subject2"
             [errorStateMatcher]="matcher"
+            appUppercaseOnly
           />
           <mat-error
             *ngIf="
-              this.createEditStudentForm.controls['mark2'].hasError(
+              this.createEditStudentForm.controls['subject2'].hasError(
                 'required'
               )
             "
           >
-            Mark 2 is required
+            Grade of Subject 2 is required
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-control">
         <mat-form-field class="example-full-width">
-          <mat-label>Mark 3</mat-label>
+          <mat-label>Grade of Subject 3</mat-label>
           <input
-            type="number"
+            type="text"
+            class="grade-input"
+            maxlength="1"
             matInput
-            formControlName="mark3"
+            formControlName="subject3"
             [errorStateMatcher]="matcher"
+            appUppercaseOnly
           />
           <mat-error
             *ngIf="
-              this.createEditStudentForm.controls['mark3'].hasError(
+              this.createEditStudentForm.controls['subject3'].hasError(
                 'required'
               )
             "
           >
-            Mark 3 is required
+            Grade of Subject 3 is required
           </mat-error>
         </mat-form-field>
       </div>
@@ -129,8 +138,21 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button [disabled]="createEditStudentLoader" (click)="dialogRef.close(false)" mat-button color="warn">Cancel</button>
-  <button [disabled]="createEditStudentLoader" (click)="addEditStudent()" mat-button color="primary" cdkFocusInitial>
+  <button
+    [disabled]="createEditStudentLoader"
+    (click)="dialogRef.close(false)"
+    mat-button
+    color="warn"
+  >
+    Cancel
+  </button>
+  <button
+    [disabled]="createEditStudentLoader"
+    (click)="addEditStudent()"
+    mat-button
+    color="primary"
+    cdkFocusInitial
+  >
     Create
   </button>
 </mat-dialog-actions>
