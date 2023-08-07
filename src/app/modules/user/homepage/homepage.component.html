@@ -25,13 +25,13 @@
         <div class="form-control">
           <mat-form-field>
             <mat-label>Class</mat-label>
-            <mat-select formControlName="class">
+            <mat-select formControlName="classname">
               <mat-select-trigger>
                 <ng-container *ngIf="getClassListLoader; else dataTemplate">
                   <mat-spinner diameter="16"></mat-spinner>
                 </ng-container>
                 <ng-template #dataTemplate>
-                  {{ this.getDataForm.controls["class"].value }}
+                  {{ this.getDataForm.controls["classname"].value }}
                 </ng-template>
               </mat-select-trigger>
               <mat-option *ngFor="let item of classData" [value]="item">{{
@@ -41,11 +41,11 @@
           </mat-form-field>
         </div>
         <button
-          [disabled]="getUserDataLoader || getClassListLoader"
+          [disabled]="getStudentDataLoader || getClassListLoader"
           class="btn-1"
-          (click)="getUserData()"
+          (click)="getStudentsData()"
         >
-          <div class="btn-spinner-container" *ngIf="getUserDataLoader">
+          <div class="btn-spinner-container" *ngIf="getStudentDataLoader">
             <mat-spinner diameter="22"></mat-spinner>
           </div>
           Get Data
@@ -53,16 +53,18 @@
       </form>
     </div>
 
+    <div class="add-new-student-section" *ngIf="this.showDataSection">
+      <h3 *ngIf="!studentListData.length">No records found</h3>
+      <button (click)="openCreateStudentDialog()" class="btn-2">
+        Add new student
+      </button>
+    </div>
+
     <div
       class="table-section"
-      [ngClass]="getUserDataLoader ? 'full-height' : ''"
+      [ngClass]="studentListData.length ? 'full-height' : ''"
     >
-      <div class="add-new-student-section">
-        <button (click)="openCreateStudentDialog()" class="btn-2">
-          Add new student
-        </button>
-      </div>
-      <app-student-table></app-student-table>
+      <app-student-table [dataSource]="studentListData"></app-student-table>
     </div>
   </div>
 </div>

@@ -118,7 +118,25 @@ app.get("/insert-data", (req, res) => {
   // Generate and execute SQL queries to insert data
   const insertQueries = [];
 
-  for (let i = 0; i < 20; i++) {
+  // Loop through each stage and year combination and insert at least one entry in the table
+  stages.forEach((stage) => {
+    const years = stage === "Primary" ? primaryYears : secondaryYears;
+
+    years.forEach((year) => {
+      const randomIndex = Math.floor(Math.random() * classNames.length);
+      for (let i = 0; i <= randomIndex; i++) {
+        const classname = classNames[i];
+        const query = `
+          INSERT INTO classdetails (classname, stage, year)
+          VALUES (?, ?, ?);
+        `;
+        insertQueries.push({ query, params: [classname, stage, year] });
+      }
+    });
+  });
+
+  // Generate additional random data to fill up to 20 entries in total
+  for (let i = insertQueries.length; i < 20; i++) {
     const classname = classNames[Math.floor(Math.random() * classNames.length)];
     const stage = stages[Math.floor(Math.random() * stages.length)];
     const year =
@@ -188,7 +206,8 @@ app.post("/login", upload.none(), (req, res) => {
 });
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers["authorization"];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Extract the token after "Bearer"
 
   if (!token) {
     return res
@@ -222,43 +241,91 @@ app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
     !mark3 ||
     !stage ||
     !year ||
-    !classname ||
-    !image
+    !classname
   ) {
     return res.status(400).json({
-      error: "All fields including the image are required.",
+      error: "All fields except the image are required.",
       success: false,
     });
   }
 
-  const query = `
-    INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname, image)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+  let query;
+  let parameters;
 
-  db.run(
-    query,
-    [name, age, address, mark1, mark2, mark3, stage, year, classname, image],
-    function (err) {
-      if (err) {
-        console.error("Error inserting student data:", err.message);
-        return res
-          .status(500)
-          .json({ error: "Internal server error.", success: false });
-      }
+  if (image) {
+    query = `
+      INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname, image)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    parameters = [
+      name,
+      age,
+      address,
+      mark1,
+      mark2,
+      mark3,
+      stage,
+      year,
+      classname,
+      image,
+    ];
+  } else {
+    query = `
+      INSERT INTO students (name, age, address, mark1, mark2, mark3, stage, year, classname)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    parameters = [
+      name,
+      age,
+      address,
+      mark1,
+      mark2,
+      mark3,
+      stage,
+      year,
+      classname,
+    ];
+  }
 
-      const studentId = this.lastID;
-      res.json({
-        message: "Student data inserted successfully.",
-        studentId,
-        success: true,
-      });
+  db.run(query, parameters, function (err) {
+    if (err) {
+      console.error("Error inserting student data:", err.message);
+      return res
+        .status(500)
+        .json({ error: "Internal server error.", success: false });
     }
-  );
+
+    const id = this.lastID;
+    res.json({
+      message: "Student data inserted successfully.",
+      id,
+      success: true,
+    });
+  });
 });
 
 app.get("/students", authenticateToken, (req, res) => {
-  const query = `SELECT * FROM students`;
+  const { year, stage, classname } = req.query;
+
+  let query = `SELECT * FROM students`;
+
+  // Check if any of the query parameters (year, stage, classname) are provided
+  if (year || stage || classname) {
+    query += ` WHERE`;
+    const conditions = [];
+
+    if (year) {
+      conditions.push(` year = '${year}'`);
+    }
+    if (stage) {
+      conditions.push(` stage = '${stage}'`);
+    }
+    if (classname) {
+      conditions.push(` classname = '${classname}'`);
+    }
+
+    query += conditions.join(" AND");
+  }
 
   db.all(query, (err, students) => {
     if (err) {
@@ -343,6 +410,7 @@ app.get("/classnames", authenticateToken, (req, res) => {
     SELECT DISTINCT classname
     FROM classdetails
     WHERE stage = ? AND year = ?
+    ORDER BY classname ASC
   `;
 
   db.all(query, [stage, year], (err, rows) => {

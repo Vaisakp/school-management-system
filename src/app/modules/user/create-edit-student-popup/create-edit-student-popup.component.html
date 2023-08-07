@@ -62,12 +62,75 @@
           </mat-error>
         </mat-form-field>
       </div>
+
+      <div class="form-control">
+        <mat-form-field class="example-full-width">
+          <mat-label>Mark 1</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="mark1"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error
+            *ngIf="
+              this.createEditStudentForm.controls['mark1'].hasError(
+                'required'
+              )
+            "
+          >
+            Mark 1 is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-control">
+        <mat-form-field class="example-full-width">
+          <mat-label>Mark 2</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="mark2"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error
+            *ngIf="
+              this.createEditStudentForm.controls['mark2'].hasError(
+                'required'
+              )
+            "
+          >
+            Mark 2 is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-control">
+        <mat-form-field class="example-full-width">
+          <mat-label>Mark 3</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="mark3"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error
+            *ngIf="
+              this.createEditStudentForm.controls['mark3'].hasError(
+                'required'
+              )
+            "
+          >
+            Mark 3 is required
+          </mat-error>
+        </mat-form-field>
+      </div>
     </form>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button mat-button mat-dialog-close color="warn">Cancel</button>
-  <button mat-button [mat-dialog-close]="true" color="primary" cdkFocusInitial>
+  <button [disabled]="createEditStudentLoader" (click)="dialogRef.close(false)" mat-button color="warn">Cancel</button>
+  <button [disabled]="createEditStudentLoader" (click)="addEditStudent()" mat-button color="primary" cdkFocusInitial>
     Create
   </button>
 </mat-dialog-actions>
