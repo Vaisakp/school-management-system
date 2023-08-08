@@ -3,13 +3,13 @@
 
 html {
   font-size: 16px;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
-body,
-html {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 h1,
@@ -70,6 +70,7 @@ button:disabled {
   background: transparent;
   color: $primary-color;
   text-decoration: underline;
+  margin: 0.5rem 1rem;
 }
 
 .btn-2:hover {
@@ -101,7 +102,7 @@ button:disabled {
   text-align: center;
 }
 
-.fw-400{
+.fw-400 {
   font-weight: 400;
 }
 
@@ -109,10 +110,15 @@ mat-error {
   font-size: 0.8rem !important;
 }
 
-.error{
+.error {
   color: $danger;
 }
 
 mat-form-field {
   width: 100%;
+}
+
+
+.mat-column-Actions {
+  width: 15rem !important;
 }

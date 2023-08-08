@@ -1,14 +1,16 @@
 @import "/src/styles/colors";
 .homepage-container {
-  width: 100%;
   height: 100%;
-  padding-top: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow-y: scroll;
+  padding: 1rem;
   .data-section {
-    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
     .action-section {
+      width: 80%;
       form {
         display: flex;
         justify-content: space-between;
@@ -43,8 +45,8 @@
     }
 
     .table-section {
+      width: 80%;
       background-color: $white;
-      width: 100%;
       height: 0;
       border-radius: 0.5rem;
       overflow: hidden;
@@ -62,5 +64,20 @@
       height: 70vh;
       transition: 0.4s;
     }
+  }
+}
+
+@media (max-width: 992px) {
+  .action-section {
+    width: 95% !important;
+    form {
+      flex-direction: column;
+      button {
+        width: 11rem !important;
+      }
+    }
+  }
+  .table-section {
+    width: 95% !important;
   }
 }

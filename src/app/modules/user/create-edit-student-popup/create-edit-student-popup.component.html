@@ -152,6 +152,6 @@
     mat-button
     color="primary"
   >
-    {{ data.type | titlecase }}
+    {{ data.type === "Create" ? "Create" : "Save" }}
   </button>
 </mat-dialog-actions>
