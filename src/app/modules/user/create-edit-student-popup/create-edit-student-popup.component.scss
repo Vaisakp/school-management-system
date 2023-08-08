@@ -1,5 +1,20 @@
 .popup-title {
   font-weight: 500;
 }
-.create-edit-student-form {
+
+.image-upload{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  .image-container{
+    background-color: rgb(217, 217, 220);
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    img{
+      height: 4.5rem;
+      width: 4.5rem;
+      cursor: pointer;
+    }
+  }
 }

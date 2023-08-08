@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, ElementRef, Inject, ViewChild } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -35,6 +35,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ["./create-edit-student-popup.component.scss"],
 })
 export class CreateEditStudentPopupComponent {
+  @ViewChild("imageInput") imageInputRef!: ElementRef<HTMLInputElement>;
   createEditStudentForm: FormGroup;
   matcher = new MyErrorStateMatcher();
   createEditStudentLoader: boolean = false;
@@ -52,9 +53,24 @@ export class CreateEditStudentPopupComponent {
       subject1: ["", [Validators.required]],
       subject2: ["", [Validators.required]],
       subject3: ["", [Validators.required]],
+      image: [""]
     });
     if (this.data.type === "Edit") {
       this.createEditStudentForm.patchValue({ ...this.data.studentData });
+    }
+  }
+
+  triggerImageInputClick() {
+    this.imageInputRef.nativeElement.click();
+  }
+
+  handleImageUpload(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const selectedImage = inputElement.files?.[0];
+    if (selectedImage) {
+      const reader = new FileReader();
+      reader.onload = (e) => (this.createEditStudentForm.get('image')?.setValue(e.target?.result));
+      reader.readAsDataURL(selectedImage);
     }
   }
 

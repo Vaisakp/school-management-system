@@ -57,7 +57,7 @@ const createStudentTable = () => {
       stage TEXT NOT NULL,
       year TEXT NOT NULL,
       classname TEXT NOT NULL,
-      image BLOB
+      image Text
     );`;
 
   db.run(query, (err) => {
@@ -227,7 +227,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
+app.post("/students", authenticateToken,(req, res) => {
   const {
     name,
     age,
@@ -238,9 +238,8 @@ app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
     stage,
     year,
     classname,
+    image
   } = req.body;
-  const image = req.file;
-
   const requiredFields = [
     "name",
     "age",

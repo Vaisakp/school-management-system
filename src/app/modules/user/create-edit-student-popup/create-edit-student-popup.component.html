@@ -134,6 +134,26 @@
           </mat-error>
         </mat-form-field>
       </div>
+
+      <div class="image-upload">
+        <div class="image-container">
+          <img
+            [src]="
+                this.createEditStudentForm.get('image')?.value
+                ? this.createEditStudentForm.get('image')?.value
+                : '/assets/images/image-add-line.svg'
+            "
+            (click)="triggerImageInputClick()"
+          />
+          <input
+            type="file"
+            #imageInput
+            style="display: none"
+            accept=".jpg, .jpeg, .svg"
+            (change)="handleImageUpload($event)"
+          />
+        </div>
+      </div>
     </form>
   </div>
 </mat-dialog-content>
