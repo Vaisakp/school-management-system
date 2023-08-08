@@ -1,0 +1,25 @@
+
+  <mat-dialog-content>
+    <div class="confirm-popup-container">
+        <h4 class="fw-400">Are you sure you want to delete the data</h4>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button
+      (click)="dialogRef.close(false)"
+      mat-button
+      color="warn"
+      [disabled]="confirmPopupLoader"
+    >
+      No
+    </button>
+    <button
+      (click)="deletestudent()"
+      mat-button
+      color="primary"
+      [disabled]="confirmPopupLoader"
+    >
+      Yes
+    </button>
+  </mat-dialog-actions>
+  

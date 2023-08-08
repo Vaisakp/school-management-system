@@ -53,12 +53,16 @@ export class CreateEditStudentPopupComponent {
       subject2: ["", [Validators.required]],
       subject3: ["", [Validators.required]],
     });
+    if (this.data.type === "Edit") {
+      this.createEditStudentForm.patchValue({ ...this.data.studentData });
+    }
   }
 
-  addEditStudent() {
+  addOrEditStudent() {
     this.createEditStudentLoader = true;
     this.studentService
-      .createStudent({
+      .createOrEditStudent(this.data.type, {
+        ...this.data.studentData,
         ...this.createEditStudentForm.value,
         ...this.data.classData,
       })
@@ -71,7 +75,10 @@ export class CreateEditStudentPopupComponent {
         next: (response: CreateEditStudentResponse) => {
           this.snackbarService.openSnackBar({
             type: "success",
-            content: "Data added successfully",
+            content:
+              this.data.type === "Create"
+                ? "Data added successfully"
+                : "Data updated succesfully",
           });
           this.dialogRef.close(true);
         },

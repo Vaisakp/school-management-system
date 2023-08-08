@@ -3,6 +3,6 @@ import { StudentData } from "./studentdata.interface";
 
 export interface DialogData {
   type: string;
-  studentData?: StudentData;
+  studentData: StudentData;
   classData?: ClassConfig;
 }

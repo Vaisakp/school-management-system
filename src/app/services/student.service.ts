@@ -27,8 +27,17 @@ export class StudentService {
     });
   }
 
-  createStudent(data: StudentData){
-    return this.httpClient.post<CreateEditStudentResponse>(`${environment.apiUrl}/students/`, data);
+  createOrEditStudent(type: string, data: StudentData){
+    if(type === "Create"){
+      return this.httpClient.post<CreateEditStudentResponse>(`${environment.apiUrl}/students/`, data);
+    }
+    else{
+      return this.httpClient.put<CreateEditStudentResponse>(`${environment.apiUrl}/students/`, data, { params: { id: data.id } });
+    }
+  }
+
+  deleteStudent(id: number){
+    return this.httpClient.delete<any>(`${environment.apiUrl}/students/${id}`,);
   }
 
 }

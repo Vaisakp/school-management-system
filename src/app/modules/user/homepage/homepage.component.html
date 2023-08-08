@@ -64,7 +64,7 @@
       class="table-section"
       [ngClass]="studentListData.length ? 'full-height' : ''"
     >
-      <app-student-table [dataSource]="studentListData"></app-student-table>
+      <app-student-table [dataSource]="studentListData" (studentDataChangeEmitter)="getStudentsData()"></app-student-table>
     </div>
   </div>
 </div>

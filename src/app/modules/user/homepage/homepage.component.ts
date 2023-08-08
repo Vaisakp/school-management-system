@@ -112,7 +112,7 @@ export class HomepageComponent {
   openCreateStudentDialog() {
     const dialogRef = this.dialog.open(CreateEditStudentPopupComponent, {
       ...this.dialogConfig,
-      data: { type: "Create", classData: this.getDataForm.value },
+      data: { type: "Create", classData: this.getDataForm.value, studentData: {} },
     });
     dialogRef.afterClosed().subscribe((dataFromDialog) => {
       if(dataFromDialog){

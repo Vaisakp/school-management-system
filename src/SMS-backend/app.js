@@ -228,23 +228,38 @@ const authenticateToken = (req, res, next) => {
 };
 
 app.post("/students", authenticateToken, upload.single("image"), (req, res) => {
-  const { name, age, address, subject1, subject2, subject3, stage, year, classname } =
-    req.body;
+  const {
+    name,
+    age,
+    address,
+    subject1,
+    subject2,
+    subject3,
+    stage,
+    year,
+    classname,
+  } = req.body;
   const image = req.file;
 
-  if (
-    !name ||
-    !age ||
-    !address ||
-    !subject1 ||
-    !subject2 ||
-    !subject3 ||
-    !stage ||
-    !year ||
-    !classname
-  ) {
+  const requiredFields = [
+    "name",
+    "age",
+    "address",
+    "subject1",
+    "subject2",
+    "subject3",
+    "stage",
+    "year",
+    "classname",
+  ];
+
+  // Check if all required fields are present
+  const missingFields = requiredFields.filter((field) => !req.body[field]);
+  if (missingFields.length > 0) {
     return res.status(400).json({
-      error: "All fields except the image are required.",
+      error: `All fields except the image are required. Missing fields: ${missingFields.join(
+        ", "
+      )}`,
       success: false,
     });
   }
@@ -338,50 +353,62 @@ app.get("/students", authenticateToken, (req, res) => {
   });
 });
 
-app.put(
-  "/students/:id",
-  authenticateToken,
-  upload.single("image"),
-  (req, res) => {
-    const studentId = req.params.id;
-    const studentData = req.body;
+app.put("/students/", authenticateToken, upload.single("image"), (req, res) => {
+  const studentId = req.body.id;
+  const studentData = req.body;
 
-    if (Object.keys(studentData).length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No fields to update.", success: false });
-    }
+  const requiredFields = [
+    "name",
+    "age",
+    "address",
+    "subject1",
+    "subject2",
+    "subject3",
+    "stage",
+    "year",
+    "classname",
+  ];
 
-    const keys = Object.keys(studentData);
-    const values = Object.values(studentData);
+  // Check if all required fields are present
+  const missingFields = requiredFields.filter((field) => !studentData[field]);
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: `All fields except the image are required. Missing fields: ${missingFields.join(
+        ", "
+      )}`,
+      success: false,
+    });
+  }
 
-    const placeholders = keys.map((key) => `${key} = ?`).join(", ");
+  const keys = Object.keys(studentData);
+  const values = Object.values(studentData);
 
-    const query = `
+  const placeholders = keys.map((key) => `${key} = ?`).join(", ");
+
+  const query = `
     UPDATE students
     SET ${placeholders}
     WHERE id = ?
   `;
 
-    db.run(query, [...values, studentId], function (err) {
-      if (err) {
-        console.error("Error updating student data:", err.message);
-        return res
-          .status(500)
-          .json({ error: "Internal server error.", success: false });
-      }
+  db.run(query, [...values, studentId], function (err) {
+    if (err) {
+      console.error("Error updating student data:", err.message);
+      return res
+        .status(500)
+        .json({ error: "Internal server error.", success: false });
+    }
 
-      res.json({
-        message: "Student data updated successfully.",
-        success: true,
-      });
+    res.json({
+      message: "Student data updated successfully.",
+      success: true,
     });
-  }
-);
+  });
+});
 
+// Delete student data by ID
 app.delete("/students/:id", authenticateToken, (req, res) => {
-  const studentId = req.params.id;
-
+  const studentId = req.params.id; // Get studentId from URL parameter
   const query = `DELETE FROM students WHERE id = ?`;
 
   db.run(query, [studentId], function (err) {
