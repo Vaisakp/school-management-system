@@ -4,6 +4,8 @@ import { CreateEditStudentPopupComponent } from "../create-edit-student-popup/cr
 import { MatDialog } from "@angular/material/dialog";
 import { SharedUtils } from "src/app/shared/services/shared.utils";
 import { ConfirmPopupComponent } from "src/app/shared/confirm-popup/confirm-popup.component";
+import { Router } from "@angular/router";
+import { ClassConfig } from "src/app/models/interfaces/classconfig.interface";
 
 @Component({
   selector: "app-student-table",
@@ -13,13 +15,15 @@ import { ConfirmPopupComponent } from "src/app/shared/confirm-popup/confirm-popu
 export class StudentTableComponent {
   @Output() studentDataChangeEmitter = new EventEmitter<boolean>();
   @Input() dataSource: Array<StudentData> = [];
+  @Input() classConfig: ClassConfig = { stage: '', classname: '', year: '' }
   displayedColumns: string[] = ["No.", "Name", "Age", "Address", "Actions"];
   dialogConfig = this.sharedUtils.getMatCommonDialogConfig();
-  constructor(private dialog: MatDialog, private sharedUtils: SharedUtils) {}
+  constructor(private dialog: MatDialog, private sharedUtils: SharedUtils, private router: Router) {}
   openDetailedPage(studentData: StudentData) {
-    console.log(studentData);
+    this.router.navigate(['/user','student-detailed-view',studentData.id] );
   }
-  editStudentData(studentData: StudentData) {
+  editStudentData(event: Event,studentData: StudentData) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(CreateEditStudentPopupComponent, {
       ...this.dialogConfig,
       data: { type: "Edit", studentData },
@@ -31,7 +35,8 @@ export class StudentTableComponent {
     });
   }
 
-  deleteStudent(studentData: StudentData) {
+  deleteStudent(event: Event,studentData: StudentData) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(ConfirmPopupComponent, {
       ...this.dialogConfig,
       data: { type: "Delete", studentData },

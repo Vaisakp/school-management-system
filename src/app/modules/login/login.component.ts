@@ -48,11 +48,11 @@ export class LoginComponent {
   onSubmit() {
     this.loginService.login(this.loginForm.value).subscribe({
       next: (response: LoginResponse) => {
-        localStorage.setItem("token", response.token);
         this.snackBarService.openSnackBar({
           type: "success",
           content: "Logged in successfully",
         });
+        localStorage.setItem("token", response.token);
         this.router.navigate(["/user"]);
       },
       error: (response) => {

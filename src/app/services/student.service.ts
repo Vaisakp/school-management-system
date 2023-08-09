@@ -5,6 +5,7 @@ import { ClassListResponse } from "../models/interfaces/classlistresponse.interf
 import { StudentListResponse } from "../models/interfaces/studentlistresponse.interface";
 import { StudentData } from "../models/interfaces/studentdata.interface";
 import { CreateEditStudentResponse } from "../models/interfaces/create-edit-student-response.interface";
+import { StudentResponse } from "../models/interfaces/student-response";
 
 @Injectable({
   providedIn: "root",
@@ -25,6 +26,10 @@ export class StudentService {
     return this.httpClient.get<StudentListResponse>(`${environment.apiUrl}/students/`, {
       params: data,
     });
+  }
+
+  getStudentData(id: string){
+    return this.httpClient.get<StudentResponse>(`${environment.apiUrl}/students/${id}`)
   }
 
   createOrEditStudent(type: string, data: StudentData){

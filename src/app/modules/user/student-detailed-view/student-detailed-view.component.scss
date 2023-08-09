@@ -1,0 +1,53 @@
+@import '/src/styles/colors';
+.student-detailed-view-container{
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    display: grid;
+    place-items: center;
+    .student-detailed-view{
+        margin: auto;
+        width: 40vw;
+        padding: 1.5rem;
+        background-color: $white;
+        border-radius: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .image-section{
+            img{
+                height: 10rem;
+                width: 10rem;
+                border-radius: 50%;
+                border: 0.7rem solid rgb(198, 198, 198);
+            }
+        }
+        .data-section{
+            width: 100%;
+            margin: 1rem 0;
+            h5{
+                margin-bottom: 0.5rem;
+            }
+            .table-section{
+                border-radius: 0.5rem;
+                .table-row{
+                    display: flex;
+                    padding: 0.3rem;
+                    .name, .value{
+                        flex: 1;
+                        text-align: center;
+                    }
+                    .name{
+                        font-weight: 500;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 992px){
+    .student-detailed-view{
+        width: 80% !important;
+    }
+}

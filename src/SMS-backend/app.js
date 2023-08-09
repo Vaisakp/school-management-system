@@ -352,6 +352,24 @@ app.get("/students", authenticateToken, (req, res) => {
   });
 });
 
+app.get("/students/:id", authenticateToken, (req, res) => {
+  const studentId = req.params.id;
+  const query = `SELECT * FROM students WHERE id = ?`;
+
+  db.get(query, [studentId], (err, student) => {
+    if (err) {
+      console.error("Error retrieving student data:", err.message);
+      return res.status(500).json({ error: "Internal server error.", success: false });
+    }
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found.", success: false });
+    }
+
+    res.json({ data: student, success: true });
+  });
+});
+
 app.put("/students/", authenticateToken, upload.single("image"), (req, res) => {
   const studentId = req.body.id;
   const studentData = req.body;

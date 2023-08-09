@@ -14,6 +14,7 @@ import { CreateEditStudentPopupComponent } from "./create-edit-student-popup/cre
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
 import { SharedModule } from "src/app/shared/shared.module";
+import { StudentDetailedViewComponent } from './student-detailed-view/student-detailed-view.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SharedModule } from "src/app/shared/shared.module";
     NavBarComponent,
     StudentTableComponent,
     CreateEditStudentPopupComponent,
+    StudentDetailedViewComponent,
   ],
   imports: [
     CommonModule,
