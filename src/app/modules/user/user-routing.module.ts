@@ -9,11 +9,13 @@ import { UserComponent } from "./user.component";
 import { HomepageComponent } from "./homepage/homepage.component";
 import { StudentDetailedViewComponent } from "./student-detailed-view/student-detailed-view.component";
 import { StudentService } from "src/app/services/student.service";
+import { authGuard } from "src/app/guards/auth.guard";
 
 const routes: Routes = [
   {
     path: "",
     component: UserComponent,
+    canActivate: [ authGuard ],
     children: [
       { path: "", redirectTo: "homepage", pathMatch: "full" },
       { path: "homepage", component: HomepageComponent },

@@ -37,7 +37,7 @@ export class LoginComponent {
           content: "Logged in successfully",
         });
         localStorage.setItem("token", response.token);
-        this.router.navigate(["/user"]);
+        this.router.navigate(["user"]);
       },
       error: (response) => {
         this.snackBarService.openSnackBar({

@@ -1,18 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-// function getRedirectionPath(){
-//   const authService = new AuthService;
-//   const isLoggedIn = authService.isAuthenticated();
-//   return isLoggedIn ? 'user' : 'login'
-// }
-
-
 const routes: Routes = [
   {
     path: "",
     redirectTo: 'login',
-    pathMatch: "full",
+    pathMatch: "full"
   },
   {
     path: "login",
