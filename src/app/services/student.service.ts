@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { ClassListResponse } from "../models/interfaces/classlistresponse.interface";
-import { StudentListResponse } from "../models/interfaces/studentlistresponse.interface";
+import { ClassListResponse } from "../models/interfaces/classlist-response.interface";
+import { StudentListResponse } from "../models/interfaces/student-list-response.interface";
 import { StudentData } from "../models/interfaces/studentdata.interface";
 import { CreateEditStudentResponse } from "../models/interfaces/create-edit-student-response.interface";
 import { StudentResponse } from "../models/interfaces/student-response";

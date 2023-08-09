@@ -29,12 +29,9 @@ import { StudentDetailedViewComponent } from './student-detailed-view/student-de
     CommonModule,
     UserRoutingModule,
     MatSelectModule,
-    MatButtonModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatTableModule,
-    MatDialogModule,
-    MatInputModule,
     SharedModule,
   ],
 })

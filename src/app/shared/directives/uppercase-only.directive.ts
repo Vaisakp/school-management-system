@@ -11,6 +11,6 @@ export class UppercaseOnlyDirective {
     const input = event.target as HTMLInputElement;
     const newValue = input.value.replace(/[^a-fA-F]/g, '').toUpperCase();
     this.renderer.setProperty(input, 'value', newValue);
-    this.ngControl.control?.setValue(newValue); // Update the FormControl's value
+    this.ngControl.control?.setValue(newValue);
   }
 }

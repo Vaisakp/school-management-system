@@ -4,7 +4,7 @@ import { environment } from "src/environments/environment";
 import {
   LoginResponse,
   UserData,
-} from "../models/interfaces/loginresponse.interface";
+} from "../models/interfaces/login-response.interface";
 @Injectable({
   providedIn: "root",
 })

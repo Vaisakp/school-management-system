@@ -1,31 +1,15 @@
 import { Component } from "@angular/core";
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   Validators,
 } from "@angular/forms";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { Router } from "@angular/router";
-import { LoginResponse } from "src/app/models/interfaces/loginresponse.interface";
+import { MyErrorStateMatcher } from "src/app/common/class/my-error-state-matcher";
+import { LoginResponse } from "src/app/models/interfaces/login-response.interface";
 import { LoginService } from "src/app/services/login.service";
 import { SnackbarService } from "src/app/shared/services/snackbar.service";
 
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",

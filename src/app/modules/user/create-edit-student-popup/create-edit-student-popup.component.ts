@@ -1,33 +1,16 @@
 import { Component, ElementRef, Inject, ViewChild } from "@angular/core";
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   Validators,
 } from "@angular/forms";
-import { ErrorStateMatcher } from "@angular/material/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { finalize } from "rxjs";
+import { MyErrorStateMatcher } from "src/app/common/class/my-error-state-matcher";
 import { CreateEditStudentResponse } from "src/app/models/interfaces/create-edit-student-response.interface";
 import { DialogData } from "src/app/models/interfaces/dialogdata.interface";
 import { StudentService } from "src/app/services/student.service";
 import { SnackbarService } from "src/app/shared/services/snackbar.service";
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
 
 @Component({
   selector: "app-create-edit-student-popup",

@@ -5,11 +5,13 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private router: Router) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -20,7 +22,16 @@ export class AuthInterceptor implements HttpInterceptor {
       const authReq = request.clone({
         setHeaders: { Authorization: `Bearer ${token}` },
       });
-      return next.handle(authReq);
+
+      return next.handle(authReq).pipe(
+        catchError((error) => {
+          if (error.error.error === "Invalid or expired token. Please login again") {
+            localStorage.clear();
+            this.router.navigate(["/login"]);
+          }
+          return throwError(error);
+        })
+      );
     }
     return next.handle(request);
   }

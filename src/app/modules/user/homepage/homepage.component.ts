@@ -4,11 +4,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { CreateEditStudentPopupComponent } from "../create-edit-student-popup/create-edit-student-popup.component";
 import { SharedUtils } from "src/app/shared/services/shared.utils";
 import { StudentService } from "src/app/services/student.service";
-import { ClassListResponse } from "src/app/models/interfaces/classlistresponse.interface";
 import { finalize } from "rxjs";
 import { SnackbarService } from "src/app/shared/services/snackbar.service";
 import { StudentData } from "src/app/models/interfaces/studentdata.interface";
-import { StudentListResponse } from "src/app/models/interfaces/studentlistresponse.interface";
+import { ClassListResponse } from "src/app/models/interfaces/classlist-response.interface";
+import { StudentListResponse } from "src/app/models/interfaces/student-list-response.interface";
 
 @Component({
   selector: "app-homepage",
@@ -21,8 +21,8 @@ export class HomepageComponent {
   yearData: Array<string> = [];
   classData: Array<string> = [];
   studentListData: Array<StudentData> = [];
-  getClassListLoader: boolean = false;
-  getStudentDataLoader: boolean = false;
+  classListLoader: boolean = false;
+  studentDataLoader: boolean = false;
   showDataSection: boolean = false;
   dialogConfig = this.sharedUtils.getMatCommonDialogConfig();
   constructor(
@@ -42,16 +42,7 @@ export class HomepageComponent {
 
   setYear() {
     if (this.getDataForm.controls["stage"].value === "Primary") {
-      this.yearData = [
-        "KG 1",
-        "KG 2",
-        "KG 3",
-        "Year 1",
-        "Year 2",
-        "Year 3",
-        "Year 4",
-        "Year 5",
-      ];
+      this.yearData = ["KG 1","KG 2","KG 3","Year 1","Year 2","Year 3","Year 4","Year 5"];
     } else {
       this.yearData = ["Year 6", "Year 7", "Year 8", "Year 9"];
     }
@@ -60,7 +51,7 @@ export class HomepageComponent {
   }
 
   setClass() {
-    this.getClassListLoader = true;
+    this.classListLoader = true;
     this.getDataForm.get("classname")?.disable();
     this.studentService
       .getClassList({
@@ -69,7 +60,7 @@ export class HomepageComponent {
       })
       .pipe(
         finalize(() => {
-          this.getClassListLoader = false;
+          this.classListLoader = false;
           this.getDataForm.get("classname")?.enable();
         })
       )
@@ -90,12 +81,12 @@ export class HomepageComponent {
   }
 
   getStudentsData() {
-    this.getStudentDataLoader = true;
+    this.studentDataLoader = true;
     this.studentService
       .getStudentsData(this.getDataForm.value)
       .pipe(
         finalize(() => {
-          this.getStudentDataLoader = false;
+          this.studentDataLoader = false;
         })
       )
       .subscribe({

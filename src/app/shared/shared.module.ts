@@ -28,6 +28,13 @@ import { MatDialogModule } from "@angular/material/dialog";
     MatDialogModule,
   ],
   providers: [SharedUtils, SnackbarService],
-  exports: [SnackBarComponent, UppercaseOnlyDirective, ConfirmPopupComponent]
+  exports: [
+    SnackBarComponent, 
+    UppercaseOnlyDirective, 
+    ConfirmPopupComponent, 
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule
+  ]
 })
 export class SharedModule {}

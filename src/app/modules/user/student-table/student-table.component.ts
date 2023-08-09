@@ -22,7 +22,7 @@ export class StudentTableComponent {
   openDetailedPage(studentData: StudentData) {
     this.router.navigate(['/user','student-detailed-view',studentData.id] );
   }
-  editStudentData(event: Event,studentData: StudentData) {
+  editStudent(event: Event,studentData: StudentData) {
     event.stopPropagation();
     const dialogRef = this.dialog.open(CreateEditStudentPopupComponent, {
       ...this.dialogConfig,

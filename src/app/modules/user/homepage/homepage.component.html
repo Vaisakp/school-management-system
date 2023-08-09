@@ -27,7 +27,7 @@
             <mat-label>Class</mat-label>
             <mat-select formControlName="classname">
               <mat-select-trigger>
-                <ng-container *ngIf="getClassListLoader; else dataTemplate">
+                <ng-container *ngIf="classListLoader; else dataTemplate">
                   <mat-spinner diameter="16"></mat-spinner>
                 </ng-container>
                 <ng-template #dataTemplate>
@@ -41,11 +41,11 @@
           </mat-form-field>
         </div>
         <button
-          [disabled]="getStudentDataLoader || getClassListLoader"
+          [disabled]="studentDataLoader || classListLoader"
           class="btn-1"
           (click)="getStudentsData()"
         >
-          <div class="btn-spinner-container" *ngIf="getStudentDataLoader">
+          <div class="btn-spinner-container" *ngIf="studentDataLoader">
             <mat-spinner diameter="22"></mat-spinner>
           </div>
           Get Data

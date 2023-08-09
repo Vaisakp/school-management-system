@@ -23,7 +23,7 @@
     <ng-container matColumnDef="Actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
-        <button class="btn-2" (click)="editStudentData($event,element)">Edit</button>
+        <button class="btn-2" (click)="editStudent($event,element)">Edit</button>
         <button class="btn-2 error" (click)="deleteStudent($event,element)">Delete</button>
       </td>
     </ng-container>

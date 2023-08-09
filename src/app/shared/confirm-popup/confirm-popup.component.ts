@@ -13,8 +13,8 @@ import { SnackbarService } from "../services/snackbar.service";
 export class ConfirmPopupComponent {
   confirmPopupLoader: boolean = false;
   constructor(
-    public dialogRef: MatDialogRef<ConfirmPopupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public dialogRef: MatDialogRef<ConfirmPopupComponent>,
     private studentService: StudentService,
     private snackbarService: SnackbarService
   ) {}
