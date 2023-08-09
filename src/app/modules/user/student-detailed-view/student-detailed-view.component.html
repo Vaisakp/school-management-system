@@ -1,7 +1,8 @@
 <div class="student-detailed-view-container">
   <div class="student-detailed-view">
     <div class="image-section">
-      <img [src]="studentData.image" alt="" />
+      <p *ngIf="!studentData.image">Not uploaded</p>
+      <img *ngIf="studentData.image" [src]="studentData.image"/>
     </div>
     <div class="data-section">
       <h5 class="text-center fw-400">{{ studentData.name }}</h5>

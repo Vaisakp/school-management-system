@@ -1,10 +1,13 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
+const multer = require("multer");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 const app = express();
 const port = 3000;
+const secretKey = "your_secret_key";
 
-// Create SQLite database
 const db = new sqlite3.Database("./database.db", (err) => {
   if (err) {
     console.error("Error connecting to the database:", err.message);
@@ -13,77 +16,79 @@ const db = new sqlite3.Database("./database.db", (err) => {
   }
 });
 
-// Define the schema for the "users" table and insert the default user
-const createUserTable = () => {
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      password TEXT NOT NULL
-    );`;
+const createTable = (query, tableName) => {
+  db.run(query, (err) => {
+    if (err) {
+      console.error(`Error creating the "${tableName}" table:`, err.message);
+    } else {
+      console.log(`Table "${tableName}" created successfully.`);
+    }
+  });
+};
 
+const addDefaultUser = () => {
   const insertDefaultUserQuery = `
     INSERT INTO users (name, password)
     VALUES ('vaisak', 'password');
   `;
-
-  db.run(createTableQuery, (err) => {
+  db.run(insertDefaultUserQuery, (err) => {
     if (err) {
-      console.error("Error creating the table:", err.message);
+      console.error("Error inserting default user:", err.message);
     } else {
-      console.log('Table "users" created successfully.');
-
-      db.run(insertDefaultUserQuery, (err) => {
-        if (err) {
-          console.error("Error inserting default user:", err.message);
-        } else {
-          console.log("Default user inserted successfully.");
-        }
-      });
+      console.log("Default user inserted successfully.");
     }
   });
 };
 
-const createStudentTable = () => {
-  const query = `
-    CREATE TABLE IF NOT EXISTS students (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      age INTEGER NOT NULL,
-      address TEXT NOT NULL,
-      subject1 INTEGER NOT NULL,
-      subject2 INTEGER NOT NULL,
-      subject3 INTEGER NOT NULL,
-      stage TEXT NOT NULL,
-      year TEXT NOT NULL,
-      classname TEXT NOT NULL
-    );`;
+const createUserTableQuery = `
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL
+  );`;
+const createStudentTableQuery = `
+  CREATE TABLE IF NOT EXISTS students (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    address TEXT NOT NULL,
+    subject1 TEXT NOT NULL,
+    subject2 TEXT NOT NULL,
+    subject3 TEXT NOT NULL,
+    stage TEXT NOT NULL,
+    year TEXT NOT NULL,
+    classname TEXT NOT NULL,
+    image TEXT
+  );`;
+const createClassDetailsTableQuery = `
+  CREATE TABLE IF NOT EXISTS classdetails (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    classname TEXT NOT NULL,
+    stage TEXT NOT NULL,
+    year INTEGER NOT NULL
+  );`;
 
-  db.run(query, (err) => {
-    if (err) {
-      console.error('Error creating the "students" table:', err.message);
-    } else {
-      console.log('Table "students" created successfully.');
-    }
-  });
-};
+createTable(createUserTableQuery, "users");
+createTable(createStudentTableQuery, "students");
+createTable(createClassDetailsTableQuery, "classdetails");
+addDefaultUser();
 
-const createClassDetailsTable = () => {
-  const query = `
-    CREATE TABLE IF NOT EXISTS classdetails (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      classname TEXT NOT NULL,
-      stage TEXT NOT NULL,
-      year INTEGER NOT NULL
-    );`;
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+const upload = multer();
 
-  db.run(query, (err) => {
-    if (err) {
-      console.error('Error creating the "classdetails" table:', err.message);
-    } else {
-      console.log('Table "classdetails" created successfully.');
-    }
-  });
+const generateToken = (user) => {
+  const payload = {
+    id: user.id,
+    name: user.name,
+  };
+
+  const options = {
+    expiresIn: "1h",
+  };
+
+  return jwt.sign(payload, secretKey, options);
 };
 
 app.get("/insert-data", (req, res) => {
@@ -104,7 +109,25 @@ app.get("/insert-data", (req, res) => {
   // Generate and execute SQL queries to insert data
   const insertQueries = [];
 
-  for (let i = 0; i < 20; i++) {
+  // Loop through each stage and year combination and insert at least one entry in the table
+  stages.forEach((stage) => {
+    const years = stage === "Primary" ? primaryYears : secondaryYears;
+
+    years.forEach((year) => {
+      const randomIndex = Math.floor(Math.random() * classNames.length);
+      for (let i = 0; i <= randomIndex; i++) {
+        const classname = classNames[i];
+        const query = `
+            INSERT INTO classdetails (classname, stage, year)
+            VALUES (?, ?, ?);
+          `;
+        insertQueries.push({ query, params: [classname, stage, year] });
+      }
+    });
+  });
+
+  // Generate additional random data to fill up to 20 entries in total
+  for (let i = insertQueries.length; i < 20; i++) {
     const classname = classNames[Math.floor(Math.random() * classNames.length)];
     const stage = stages[Math.floor(Math.random() * stages.length)];
     const year =
@@ -113,9 +136,9 @@ app.get("/insert-data", (req, res) => {
         : secondaryYears[Math.floor(Math.random() * secondaryYears.length)];
 
     const query = `
-      INSERT INTO classdetails (classname, stage, year)
-      VALUES (?, ?, ?);
-    `;
+        INSERT INTO classdetails (classname, stage, year)
+        VALUES (?, ?, ?);
+      `;
 
     insertQueries.push({ query, params: [classname, stage, year] });
   }
@@ -134,15 +157,7 @@ app.get("/insert-data", (req, res) => {
   });
 });
 
-// Create the "users" table if it doesn't exist and insert default user
-createUserTable();
-createStudentTable();
-createClassDetailsTable();
-app.use(express.json());
-
-// Login API endpoint
-app.post("/login", express.json(), (req, res) => {
-  console.log("sfsdgds");
+app.post("/login", upload.none(), (req, res) => {
   const { name, password } = req.body;
 
   if (!name || !password) {
@@ -167,13 +182,38 @@ app.post("/login", express.json(), (req, res) => {
       });
     }
 
-    // Remove the "password" field from the user object before sending it in the response
     delete user.password;
-    res.json({ data: user, success: true });
+    const token = generateToken(user);
+    res.json({ data: user, token, success: true });
   });
 });
 
-app.post("/students", (req, res) => {
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Extract the token after "Bearer"
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ error: "Authorization header not found.", success: false });
+  }
+
+  jwt.verify(token, secretKey, (err, user) => {
+    if (err) {
+      return res
+        .status(403)
+        .json({
+          error: "Invalid or expired token. Please login again",
+          success: false,
+        });
+    }
+
+    req.user = user;
+    next();
+  });
+};
+
+app.post("/students", authenticateToken, (req, res) => {
   const {
     name,
     age,
@@ -184,53 +224,108 @@ app.post("/students", (req, res) => {
     stage,
     year,
     classname,
+    image,
   } = req.body;
+  const requiredFields = [
+    "name",
+    "age",
+    "address",
+    "subject1",
+    "subject2",
+    "subject3",
+    "stage",
+    "year",
+    "classname",
+  ];
 
-  if (
-    !name ||
-    !age ||
-    !address ||
-    !subject1 ||
-    !subject2 ||
-    !subject3 ||
-    !stage ||
-    !year ||
-    !classname
-  ) {
-    return res
-      .status(400)
-      .json({ error: "All fields are required.", success: false });
+  // Check if all required fields are present
+  const missingFields = requiredFields.filter((field) => !req.body[field]);
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: `All fields except the image are required. Missing fields: ${missingFields.join(
+        ", "
+      )}`,
+      success: false,
+    });
   }
 
-  const query = `
-    INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+  let query;
+  let parameters;
 
-  db.run(
-    query,
-    [name, age, address, subject1, subject2, subject3, stage, year, classname],
-    function (err) {
-      if (err) {
-        console.error("Error inserting student data:", err.message);
-        return res
-          .status(500)
-          .json({ error: "Internal server error.", success: false });
-      }
+  if (image) {
+    query = `
+        INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname, image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+    parameters = [
+      name,
+      age,
+      address,
+      subject1,
+      subject2,
+      subject3,
+      stage,
+      year,
+      classname,
+      image,
+    ];
+  } else {
+    query = `
+        INSERT INTO students (name, age, address, subject1, subject2, subject3, stage, year, classname)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+    parameters = [
+      name,
+      age,
+      address,
+      subject1,
+      subject2,
+      subject3,
+      stage,
+      year,
+      classname,
+    ];
+  }
 
-      const studentId = this.lastID;
-      res.json({
-        message: "Student data inserted successfully.",
-        studentId,
-        success: true,
-      });
+  db.run(query, parameters, function (err) {
+    if (err) {
+      console.error("Error inserting student data:", err.message);
+      return res
+        .status(500)
+        .json({ error: "Internal server error.", success: false });
     }
-  );
+
+    const id = this.lastID;
+    res.json({
+      message: "Student data inserted successfully.",
+      id,
+      success: true,
+    });
+  });
 });
 
-// API endpoint to retrieve all student records from the "students" table
-app.get("/students", (req, res) => {
-  const query = `SELECT * FROM students`;
+app.get("/students", authenticateToken, (req, res) => {
+  const { year, stage, classname } = req.query;
+
+  let query = `SELECT * FROM students`;
+
+  // Check if any of the query parameters (year, stage, classname) are provided
+  if (year || stage || classname) {
+    query += ` WHERE`;
+    const conditions = [];
+
+    if (year) {
+      conditions.push(` year = '${year}'`);
+    }
+    if (stage) {
+      conditions.push(` stage = '${stage}'`);
+    }
+    if (classname) {
+      conditions.push(` classname = '${classname}'`);
+    }
+
+    query += conditions.join(" AND");
+  }
 
   db.all(query, (err, students) => {
     if (err) {
@@ -243,31 +338,66 @@ app.get("/students", (req, res) => {
   });
 });
 
-// API endpoint to update a student record in the "students" table by ID
-app.put("/students/:id", (req, res) => {
+app.get("/students/:id", authenticateToken, (req, res) => {
   const studentId = req.params.id;
+  const query = `SELECT * FROM students WHERE id = ?`;
+
+  db.get(query, [studentId], (err, student) => {
+    if (err) {
+      console.error("Error retrieving student data:", err.message);
+      return res
+        .status(500)
+        .json({ error: "Internal server error.", success: false });
+    }
+
+    if (!student) {
+      return res
+        .status(404)
+        .json({ error: "Student not found.", success: false });
+    }
+
+    res.json({ data: student, success: true });
+  });
+});
+
+app.put("/students/", authenticateToken, upload.single("image"), (req, res) => {
+  const studentId = req.body.id;
   const studentData = req.body;
 
-  // Check if any fields are provided in the request body
-  if (Object.keys(studentData).length === 0) {
-    return res
-      .status(400)
-      .json({ error: "No fields to update.", success: false });
+  const requiredFields = [
+    "name",
+    "age",
+    "address",
+    "subject1",
+    "subject2",
+    "subject3",
+    "stage",
+    "year",
+    "classname",
+  ];
+
+  // Check if all required fields are present
+  const missingFields = requiredFields.filter((field) => !studentData[field]);
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: `All fields except the image are required. Missing fields: ${missingFields.join(
+        ", "
+      )}`,
+      success: false,
+    });
   }
 
   const keys = Object.keys(studentData);
   const values = Object.values(studentData);
 
-  // Generate placeholders for dynamic SQL query
   const placeholders = keys.map((key) => `${key} = ?`).join(", ");
 
   const query = `
-    UPDATE students
-    SET ${placeholders}
-    WHERE id = ?
-  `;
+      UPDATE students
+      SET ${placeholders}
+      WHERE id = ?
+    `;
 
-  // Execute the dynamic SQL query
   db.run(query, [...values, studentId], function (err) {
     if (err) {
       console.error("Error updating student data:", err.message);
@@ -276,14 +406,15 @@ app.put("/students/:id", (req, res) => {
         .json({ error: "Internal server error.", success: false });
     }
 
-    res.json({ message: "Student data updated successfully.", success: true });
+    res.json({
+      message: "Student data updated successfully.",
+      success: true,
+    });
   });
 });
 
-// API endpoint to delete a student record from the "students" table by ID
-app.delete("/students/:id", (req, res) => {
-  const studentId = req.params.id;
-
+app.delete("/students/:id", authenticateToken, (req, res) => {
+  const studentId = req.params.id; // Get studentId from URL parameter
   const query = `DELETE FROM students WHERE id = ?`;
 
   db.run(query, [studentId], function (err) {
@@ -298,8 +429,7 @@ app.delete("/students/:id", (req, res) => {
   });
 });
 
-// API endpoint to get classnames based on stage and year values
-app.get("/classnames", (req, res) => {
+app.get("/classnames", authenticateToken, (req, res) => {
   const { stage, year } = req.query;
 
   if (!stage || !year) {
@@ -309,12 +439,12 @@ app.get("/classnames", (req, res) => {
     });
   }
 
-  // Query the database to get classnames based on stage and year
   const query = `
-    SELECT DISTINCT classname
-    FROM classdetails
-    WHERE stage = ? AND year = ?
-  `;
+      SELECT DISTINCT classname
+      FROM classdetails
+      WHERE stage = ? AND year = ?
+      ORDER BY classname ASC
+    `;
 
   db.all(query, [stage, year], (err, rows) => {
     if (err) {
@@ -329,18 +459,15 @@ app.get("/classnames", (req, res) => {
   });
 });
 
-// Error handling middleware for routes that don't exist
 app.use((req, res, next) => {
   res.status(404).json({ error: "Not found.", success: false });
 });
 
-// Error handling middleware for all other errors
 app.use((err, req, res, next) => {
   console.error("Internal server error:", err);
   res.status(500).json({ error: "Internal server error.", success: false });
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
