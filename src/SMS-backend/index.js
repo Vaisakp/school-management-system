@@ -16,12 +16,15 @@ const db = new sqlite3.Database("./database.db", (err) => {
   }
 });
 
-const createTable = (query, tableName) => {
+const createTable = (query, tableName, callback) => {
   db.run(query, (err) => {
     if (err) {
       console.error(`Error creating the "${tableName}" table:`, err.message);
     } else {
       console.log(`Table "${tableName}" created successfully.`);
+      if (callback) {
+        callback()
+      }
     }
   });
 };
@@ -37,6 +40,71 @@ const addDefaultUser = () => {
     } else {
       console.log("Default user inserted successfully.");
     }
+  });
+};
+
+const insertInitialData = () => {
+  const classNames = ["Class A", "Class B", "Class C", "Class D", "Class E"];
+  const stages = ["Primary", "Secondary"];
+  const primaryYears = [
+    "KG 1",
+    "KG 2",
+    "KG 3",
+    "Year 1",
+    "Year 2",
+    "Year 3",
+    "Year 4",
+    "Year 5",
+  ];
+  const secondaryYears = ["Year 6", "Year 7", "Year 8", "Year 9"];
+
+  // Generate and execute SQL queries to insert data
+  const insertQueries = [];
+
+  // Loop through each stage and year combination and insert at least one entry in the table
+  stages.forEach((stage) => {
+    const years = stage === "Primary" ? primaryYears : secondaryYears;
+
+    years.forEach((year) => {
+      const randomIndex = Math.floor(Math.random() * classNames.length);
+      for (let i = 0; i <= randomIndex; i++) {
+        const classname = classNames[i];
+        const query = `
+            INSERT INTO classdetails (classname, stage, year)
+            VALUES (?, ?, ?);
+          `;
+        insertQueries.push({ query, params: [classname, stage, year] });
+      }
+    });
+  });
+
+  // Generate additional random data to fill up to 20 entries in total
+  for (let i = insertQueries.length; i < 20; i++) {
+    const classname = classNames[Math.floor(Math.random() * classNames.length)];
+    const stage = stages[Math.floor(Math.random() * stages.length)];
+    const year =
+      stage === "Primary"
+        ? primaryYears[Math.floor(Math.random() * primaryYears.length)]
+        : secondaryYears[Math.floor(Math.random() * secondaryYears.length)];
+
+    const query = `
+        INSERT INTO classdetails (classname, stage, year)
+        VALUES (?, ?, ?);
+      `;
+
+    insertQueries.push({ query, params: [classname, stage, year] });
+  }
+
+  db.serialize(() => {
+    insertQueries.forEach(({ query, params }) => {
+      db.run(query, params, (err) => {
+        if (err) {
+          console.error("Error inserting data:", err.message);
+        }
+      });
+    });
+
+    console.log("Data inserted successfully.");
   });
 };
 
@@ -68,10 +136,9 @@ const createClassDetailsTableQuery = `
     year INTEGER NOT NULL
   );`;
 
-createTable(createUserTableQuery, "users");
+createTable(createUserTableQuery, "users",() => { addDefaultUser(); });
 createTable(createStudentTableQuery, "students");
-createTable(createClassDetailsTableQuery, "classdetails");
-addDefaultUser();
+createTable(createClassDetailsTableQuery, "classdetails", () => { insertInitialData() });
 
 app.use(cors());
 app.use(express.json());
